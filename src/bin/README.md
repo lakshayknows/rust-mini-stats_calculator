@@ -1,22 +1,50 @@
 # Struct-Based Mini Stats Calculator
 
-This binary (`using_struct.rs`) implements the same statistics calculator (Mean, Min, Max) but uses a Rust `struct` to encapsulate the data and behavior.
+This binary (`using_struct.rs`) implements the same statistics calculator (Mean, Min, Max) but uses Rust `structs` to encapsulate the data and behavior.
 
-## Implementation Details
+## Current Version (v2.0)
 
-Instead of passing raw vectors to standalone functions, we define a `Dataset` struct:
+The current version introduces a nested struct `MetaData` to track the dataset's name and creation time.
+
+### Key Features
+- **Nested Structs**: `Dataset` now contains a `MetaData` struct.
+- **Metadata Tracking**: Users can name their datasets, and the system automatically records the creation timestamp using `std::time::SystemTime`.
+- **Method Chaining/Interaction**: The `main` loop now calls `dataset.data.describe()` before showing results.
+
+```rust
+struct MetaData {
+    name: String,
+    created_on: time::SystemTime
+}
+
+struct Dataset {
+    list: Vec<i32>,
+    data: MetaData
+}
+```
+
+## Previous Versions
+
+| Version | Description | Code Snippet |
+| :--- | :--- | :--- |
+| v1.0 | Initial struct implementation | `struct Dataset { list: Vec<i32> }` |
+
+<details>
+<summary>View v1.0 Code</summary>
 
 ```rust
 struct Dataset {
     list: Vec<i32>
 }
-```
 
-Methods are implemented on this struct to perform calculations:
-- `Dataset::from_input()`: Factory method to create a dataset from user input.
-- `mean()`: Calculates the average.
-- `min()`: Finds the minimum value.
-- `max()`: Finds the maximum value.
+impl Dataset {
+    fn max(&self) -> i32 { /* ... */ }
+    fn min(&self) -> i32 { /* ... */ }
+    fn mean(&self) -> f64 { /* ... */ }
+    fn from_input() -> Dataset { /* ... */ }
+}
+```
+</details>
 
 ## Usage
 

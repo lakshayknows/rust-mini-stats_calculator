@@ -1,9 +1,16 @@
-// #[derive(Debug)]
 #[allow(unused_variables)]
 #[allow(dead_code)]
 use std::io;
+use std::time;
+#[derive(Debug)]
 struct Dataset {
-    list: Vec<i32> // owns the list
+    list: Vec<i32>, // owns the list
+    data: MetaData
+}
+#[derive(Debug)]
+struct MetaData {
+    name: String,
+    created_on: time::SystemTime
 }
 
 fn main() {
@@ -20,14 +27,17 @@ fn main() {
         match choice {
             "1" => {
                 let dataset = Dataset::from_input();
+                dataset.data.describe();
                 println!("Mean: {}", dataset.mean());
             }
             "2" => {
                 let dataset = Dataset::from_input();
+                dataset.data.describe();
                 println!("Min: {}", dataset.min());
             }
             "3" => {
                 let dataset = Dataset::from_input();
+                dataset.data.describe();
                 println!("Max: {}", dataset.max());
             }
             "4" => {
@@ -39,6 +49,7 @@ fn main() {
             }
         }
     }
+   
 }
 
 
@@ -92,7 +103,22 @@ impl Dataset {
             let num: i32 = item.trim().parse().expect("Invalid number in input");
             numbers.push(num);
         }
-
-        Dataset { list: numbers }
+        println!("Give your Dataset a name: ");
+        let mut data_name = String::new();
+        io::stdin().read_line(&mut data_name).expect("failed to read input");
+        let meta = MetaData {
+            name: data_name,
+            created_on: time::SystemTime::now()
+        };
+        
+        Dataset { list: numbers , data:meta}
     }
+}
+
+impl MetaData {
+    fn describe (&self) {
+        println!("Name is: {:?}",self.name);
+        println!("{:?}",self.created_on);
+    }
+    
 }
